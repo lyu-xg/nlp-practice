@@ -1,0 +1,10 @@
+1.b.
+  please run 'python revowel.py'
+  1-gram character model fails to insert vowel because there is
+  not enough 'confident' for any given position/letter, the
+  'confident' is reflected by the weights given in c1.fst
+
+1.d.
+  please run 'python resquash.py'
+
+  
