@@ -14,5 +14,6 @@ for line in sys.stdin:
         if outputchar=='<epsilon>': outputchar=''
         words[end] += [w+outputchar for w in words[start]]
 
+res = set(res)
 print('There are {} words:'.format(len(res)))
 for w in res: print(w)
