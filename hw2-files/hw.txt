@@ -8,18 +8,77 @@
   please run 'python resquash.py'
 
 2.a.
-  FST for making single substitution: mod.fst
+  To Run all commands together and see results, see allcommands.txt
+
+  The FST for making single substitution: mod.fst
     command: fstcompose mod1.fst mod2.fst >mod.fst
     (see mod1.txt and mod2.txt)
 
-  All the 1 edit distance words: edit1.fst
-    command: fstcompose alice4up.fst mod.fst | fstcompose - alice4up.fst >edit1.fst
+  1 edit distance words for 'cold': step1.fst
+    command: fstcompose cold.fst sub.fst | fstcompose - alice4up.fst step1.fst
+      to list the words: fstprint step1.fst | python printwords.py
+      >>> hold
+          told
 
-  1 edit distance words for 'cold':
-    command: fstcompose cold.fst edit1.fst | fstprint | python printwords.py
-    >>> 'hold', 'told'
-  2 edit distance words for 'cold':
-    command: fstcompose cold.fst edit1.fst | fstcompose edit1.fst - | fstprint | python printwords.py
-    >>> 'hole', 'held', 'cold', 'told', 'cold', 'hold'
-  3 edit distance words for 'cold':
-    command: fstcompose cold.fst edit1.fst | fstcompose - edit1.fst | fstcompose edit1.fst | fstprint | python printwords.py
+  2 edit distance words for 'cold': step2.fst
+    command: fstcompose step1.fst sub.fst | fstrmepsilon | fstcompose - alice4up.fst | fstrmepsilon | fsttopsort | >step2.fst
+      to list the words: fstprint step2.fst | python printwords.py
+      >>> cold
+          hole
+          held
+          hold
+          told
+
+  3 edit distance words for 'cold': step3.fst
+    command: fstcompose step2.fst sub.fst | fstcompose - alice4up.fst >step3.fst
+      to list the words: fstprint step3.fst | python printwords.py
+      >>> home
+          hold
+          head
+          told
+          hope
+          held
+          hole
+          help
+          cold
+
+
+2.b.
+  The FST for single insertion and deletion: insertndelete.fst
+    (see insertndelete.txt)
+
+  The FST for single insertion, deletion and modification: ladder.fst
+    command: fstunion insertndelete.fst sub.fst | fstarcsort | >ladder.fst
+
+  1 edit distance words for 'cold': ladder1.fst
+    command: fstcompose cold.fst ladder.fst | fstcompose - alice4up.fst | fstarcsort | >ladder1.fst
+      to list the words: fstprint ladder1.fst | python printwords.py
+      >>> hold
+          could
+          told
+
+  2 edit distance words for 'cold': ladder2.fst
+    command: fstcompose ladder1.fst ladder.fst | fstcompose - alice4up.fst | fstarcsort | >ladder2.fst
+      to list the words: fstprint ladder2.fst | python printwords.py
+      >>> hole
+          told
+          would
+          held
+          cold
+          hold
+
+  3 edit distance words for 'cold': ladder3.fst
+    command: fstcompose ladder2.fst ladder.fst | fstcompose - alice4up.fst | fstarcsort | >ladder3.fst
+      to list the words: fstprint ladder3.fst | python printwords.py
+      >>> help
+          hole
+          could
+          held
+          whole
+          hope
+          cold
+          hold
+          head
+          home
+          world
+          told

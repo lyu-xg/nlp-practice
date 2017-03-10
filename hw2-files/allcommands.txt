@@ -1,0 +1,23 @@
+
+#fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols mod1.txt | fstarcsort | > mod1.fst
+#fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols mod2.txt | fstarcsort | > mod2.fst
+#fstcompose mod1.fst mod2.fst | fstarcsort | >sub.fst
+
+fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols sub.txt | fstarcsort | > sub.fst
+
+
+fstcompose cold.fst sub.fst | fstcompose - alice4up.fst | fstarcsort | >step1.fst
+fstcompose step1.fst sub.fst | fstcompose - alice4up.fst | fstarcsort | >step2.fst
+fstcompose step2.fst sub.fst | fstcompose - alice4up.fst | fstarcsort | >step3.fst
+fstprint step1.fst | python printwords.py
+fstprint step2.fst | python printwords.py
+fstprint step3.fst | python printwords.py
+
+fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols insertndelete.txt | fstarcsort | > insertndelete.fst
+fstunion insertndelete.fst sub.fst | fstarcsort | >ladder.fst
+fstcompose cold.fst ladder.fst | fstcompose - alice4up.fst | fstarcsort | >ladder1.fst
+fstcompose ladder1.fst ladder.fst | fstcompose - alice4up.fst | fstarcsort | >ladder2.fst
+fstcompose ladder2.fst ladder.fst | fstcompose - alice4up.fst | fstarcsort | >ladder3.fst
+fstprint ladder1.fst | python printwords.py
+fstprint ladder2.fst | python printwords.py
+fstprint ladder3.fst | python printwords.py
