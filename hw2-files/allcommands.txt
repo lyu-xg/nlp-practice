@@ -1,8 +1,4 @@
-fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols mod1.txt | fstarcsort | > mod1.fst
-fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols mod2.txt | fstarcsort | > mod2.fst
-fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols self.txt | fstarcsort | > self.fst
-fstcompose mod1.fst mod2.fst | fstarcsort | >sub.fst
-fstdifference sub.fst self.fst > sub.fst
+fstcompile --isymbols=ascii.syms --osymbols=ascii.syms --keep_isymbols --keep_osymbols sub.txt | fstarcsort | > sub.fst
 
 fstcompose cold.fst sub.fst | fstcompose - alice4up.fst | fstarcsort | >step1.fst
 fstcompose step1.fst sub.fst | fstcompose - alice4up.fst | fstarcsort | >step2.fst

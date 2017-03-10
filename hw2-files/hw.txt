@@ -10,9 +10,8 @@
 2.a.
   To Run all commands together and see results, see allcommands.txt
 
-  The FST for making single substitution: mod.fst
-    command: fstcompose mod1.fst mod2.fst >mod.fst
-    (see mod1.txt and mod2.txt)
+  The FST for making single substitution: sub.fst
+    (see sub.txt; helper script: generate.py)
 
   1 edit distance words for 'cold': step1.fst
     command: fstcompose cold.fst sub.fst | fstcompose - alice4up.fst step1.fst
