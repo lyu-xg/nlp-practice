@@ -1,4 +1,3 @@
-from string import punctuation
 from collections import Counter
 from itertools import chain
 
@@ -12,23 +11,16 @@ def allFilenames():
             return [line.split()[0] for line in allDirFile]
     return map(lambda x:DATADIR+x, getAllDirs())
 
-def wordClean(word):
-    return word.lower()[:word.find('/')]
-
-def isNotPunctuation(word):
-    return not word[0] in punctuation
-
-def removePunc(sentence):
-    return list(filter(lambda x: x and isNotPunctuation(x), sentence))
 
 def getWordsFromFile(path):
     # list of list(sentence) from a filepath
+    def wordClean(word):
+        return word.lower()[:word.find('/')]
     result = []
     with open(path) as infile:
         for line in infile:
             result.append(list(map(wordClean,line.split())))
     result = filter(lambda x:x, result) # remove newlines
-    #result = map(removePunc, result) # remove puncs
     return list(result)
 
 def getAllWords():
