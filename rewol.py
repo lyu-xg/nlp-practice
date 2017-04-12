@@ -1,1 +1,0 @@
-revowelCommand = "fstcompose declaration.fst unvowel.fst | fstproject --project_output | fstrmepsilon | fstcompose - revowel1.fst | fstshortestpath | fstproject --project_output | fstrmepsilon | fsttopsort | fstprint | python printer.py"
