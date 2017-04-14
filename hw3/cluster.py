@@ -5,7 +5,7 @@ from itertools import chain, combinations, permutations
 from collections import Counter
 
 DEBUG = True
-DETAIL = True
+DETAIL = False
 
 
 class TwoGramModel(object):
@@ -58,28 +58,36 @@ class Clusters(object):
         self.wordPairs = list(pairs)
 
     def weight(self,c1,c2):
+
         biCount = self.BiCount(c1,c2)
+        if not biCount:
+            return 0
         individualCounts = self.count(c1) * self.count(c2)
         #print(biCount,individualCounts)
         return biCount*log(biCount/individualCounts, 2)
 
     def W(self,c1,c2):
         #if DEBUG: print('calculating weight for {}'.format([c1,c2]))
+        if DETAIL:
+            print('weight of {} and {}: '.format(c1,c2),self.weight(c1,c2)+self.weight(c2,c1))
         if c1==c2:
             return self.weight(c1,c2)
         else:
             return self.weight(c1,c2)+self.weight(c2,c1)
 
     def count(self, c):
-        return sum(self.M.count(w) for w in c) or 0.1
+        return sum(self.M.count(w) for w in c)# or 0.1
 
     def BiCount(self, c1, c2):
         #if DEBUG: print('getting BiCount for {} and {}'.format(c1,c2))
-        return sum(self.M.count(i,j) for i in c1 for j in c2) or 0.1
+        return sum(self.M.count(i,j) for i in c1 for j in c2) #or 0.1
+
+    def allClusterWords(self):
+        return chain.from_iterable(self.C)
 
     def LFromScratch(self, c1, c2):
         W = self.W
-        otherNodes = filter(lambda x:x not in c1 and x not in c2, self.allWords)
+        otherNodes = filter(lambda x:x not in c1 and x not in c2, self.allClusterWords())
         return -W(c1,c2)-W(c1,c1)-W(c2,c2)+W(c1+c2,c1+c2) - \
                 sum(W(c1,(w,)) for w in otherNodes) - \
                 sum(W(c2,(w,)) for w in otherNodes) + \
@@ -117,8 +125,8 @@ def main():
     M = TwoGramModel(WORDLIST)
     C = Clusters(M, WORDLIST)
     print(M.count('the','wine'))
-
-    print(C.L)
+    for item in C.L.items():
+        print(item)
 
 
 if __name__ == '__main__':
